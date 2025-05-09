@@ -61,39 +61,44 @@ struct OnboardingView: View {
     @State private var isNavigating = false
 
     var body: some View {
-        ZStack {
-            TabView(selection: $currentPage) {
-                ForEach(0..<onboardingPages.count, id: \.self) { index in
-                    OnboardingPageView(page: onboardingPages[index])
-                        .tag(index)
-                }
-            }
-            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
-            .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
-            .animation(.easeIn, value: currentPage)
-
-            // Bottom-right button only on the last page
-            if currentPage == onboardingPages.count - 1 {
-                VStack {
-                    Spacer()
-                    HStack {
-                        Spacer()
-                        Button(action: {
-                            isNavigating = true
-                        }) {
-                            Image(systemName: "arrow.right.circle.fill")
-                                .font(.largeTitle)
-                                .foregroundColor(Color("DarkBlue"))
-                                .padding()
-                        }
+        NavigationStack {
+            VStack {
+                TabView(selection: $currentPage) {
+                    ForEach(0..<onboardingPages.count, id: \.self) { index in
+                        OnboardingPageView(page: onboardingPages[index])
+                            .tag(index)
                     }
                 }
-                .transition(.opacity)
+                .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
+                .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
+                .animation(.easeIn, value: currentPage)
+
+                Button(action: {
+                    if currentPage < onboardingPages.count - 1 {
+                        currentPage += 1
+                    } else {
+                        isNavigating = true
+                    }
+                }) {
+                    Text(currentPage < onboardingPages.count - 1 ? "Get Started" : "Continue")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(.lightBlue)
+                        .cornerRadius(10)
+                        .padding(.horizontal, 30)
+                        .padding(.bottom, 30)
+                }
+
+                // 👇 This link becomes active when Continue is tapped
+                NavigationLink(destination: InputView(), isActive: $isNavigating) {
+                    EmptyView()
+                }
             }
         }
     }
 }
-
 #Preview {
     OnboardingView()
 }
