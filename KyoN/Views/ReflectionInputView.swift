@@ -13,109 +13,118 @@ struct ReflectionInputView: View {
     let onDone: (String) -> Void
 
     @State private var reflectionText = ""
+    @State private var isNavigating = false  // State to control navigation
 
     var body: some View {
-        VStack(spacing: 20) {
-            // Top bar
-            HStack {
-                Button(action: onBack) {
-                    HStack(spacing: 4) {
-                        Image(systemName: "chevron.left")
-                        Text("Back")
+        NavigationStack {
+            VStack(spacing: 20) {
+                // Top bar
+                HStack {
+                    Button(action: onBack) {
+                        HStack(spacing: 4) {
+                            Image(systemName: "chevron.left")
+                            Text("Back")
+                        }
+                        .font(.headline)
+                        .foregroundColor(.blue)
+                        .padding()
                     }
-                    .font(.headline)
-                    .foregroundColor(.blue)
-                    .padding()
+                    Spacer()
                 }
+
+                // Summary container
+                VStack(alignment: .leading, spacing: 9) {
+                    Group {
+                        Text("Physical")
+                            .font(.headline)
+                            .foregroundColor(.lightBlue)
+
+                        Divider()
+                            .frame(width: UIScreen.main.bounds.width * 0.8, height: 1)
+                            .background(Color.black)
+
+                        Text(answers[0])
+                            .font(.body)
+                            .padding(.bottom, 8)
+
+                        Text("Emotional")
+                            .font(.headline)
+                            .foregroundColor(.lightBlue)
+
+                        Divider()
+                            .frame(width: UIScreen.main.bounds.width * 0.8, height: 1)
+                            .background(Color.black)
+
+                        Text(answers[1])
+                            .font(.body)
+                            .padding(.bottom, 8)
+
+                        Text("Mental")
+                            .font(.headline)
+                            .foregroundColor(.lightBlue)
+
+                        Divider()
+                            .frame(width: UIScreen.main.bounds.width * 0.8, height: 1)
+                            .background(Color.black)
+
+                        Text(answers[2])
+                            .font(.body)
+                    }
+                }
+                .padding()
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color.white)
+                .cornerRadius(10)
+                .shadow(color: Color.black.opacity(0.70), radius: 3, x: 0, y: 2)
+                .padding(.horizontal, 30)
+
+                // Reflection input container
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Do you have something to reflect on right now?")
+                        .font(.headline)
+                        .foregroundColor(.lightBlue)
+
+                    Divider()
+                        .frame(width: UIScreen.main.bounds.width * 0.8, height: 1)
+                        .background(Color.black)
+
+                    TextEditor(text: $reflectionText)
+                        .frame(height: 150)
+                        .padding(10)
+                        .background(Color.white)
+                        .cornerRadius(10)
+                }
+                .padding()
+                .background(Color.white)
+                .cornerRadius(10)
+                .shadow(color: Color.black.opacity(0.70), radius: 3, x: 0, y: 2)
+                .padding(.horizontal, 30)
+
                 Spacer()
-            }
 
-            // Summary container
-            VStack(alignment: .leading, spacing: 10) {
-                Group {
-                    Text("Physical")
+                // Done button
+                Button(action: {
+                    onDone(reflectionText)  // This is to pass reflection text if needed
+                    isNavigating = true  // Trigger navigation to DashboardView
+                }) {
+                    Text("Done")
                         .font(.headline)
-                        .foregroundColor(.lightBlue)
+                        .foregroundColor(.white)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.lightBlue)
+                        .cornerRadius(10)
+                }
+                .padding(.horizontal, 30)
+                .padding(.bottom, 30)
 
-                    Divider()
-                        .frame(width: UIScreen.main.bounds.width * 0.6, height: 1)
-                        .background(Color.black)
-
-                    Text(answers[0])
-                        .font(.body)
-                        .padding(.bottom, 8)
-
-                    Text("Emotional")
-                        .font(.headline)
-                        .foregroundColor(.lightBlue)
-
-                    Divider()
-                        .frame(width: UIScreen.main.bounds.width * 0.8, height: 1)
-                        .background(Color.black)
-
-                    Text(answers[1])
-                        .font(.body)
-                        .padding(.bottom, 8)
-
-                    Text("Mental")
-                        .font(.headline)
-                        .foregroundColor(.lightBlue)
-
-                    Divider()
-                        .frame(width: UIScreen.main.bounds.width * 0.8, height: 1)
-                        .background(Color.black)
-
-                    Text(answers[2])
-                        .font(.body)
+                // NavigationLink to DashboardView when isNavigating is true
+                NavigationLink(destination: DashboardView(), isActive: $isNavigating) {
+                    EmptyView()  // Invisible trigger for navigation
                 }
             }
-            .padding()
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color.white)
-            .cornerRadius(10)
-            .shadow(color: Color.black.opacity(0.70), radius: 3, x: 0, y: 2)
-            .padding(.horizontal, 30)
-
-            // Reflection input container
-            VStack(alignment: .leading, spacing: 10) {
-                Text("Do you have something to reflect on right now?")
-                    .font(.headline)
-                    .foregroundColor(.lightBlue)
-
-                Divider()
-                    .frame(width: UIScreen.main.bounds.width * 0.8, height: 1)
-                    .background(Color.black)
-
-                TextEditor(text: $reflectionText)
-                    .frame(height: 150)
-                    .padding(10)
-                    .background(Color.white)
-                    .cornerRadius(10)
-            }
-            .padding()
-            .background(Color.white)
-            .cornerRadius(10)
-            .shadow(color: Color.black.opacity(0.70), radius: 3, x: 0, y: 2)
-            .padding(.horizontal, 30)
-
-            Spacer()
-
-            // Done button
-            Button(action: {
-                onDone(reflectionText)
-            }) {
-                Text("Done")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.lightBlue)
-                    .cornerRadius(10)
-            }
-            .padding(.horizontal, 30)
-            .padding(.bottom, 30)
+            .navigationBarBackButtonHidden(true)
         }
-        .navigationBarBackButtonHidden(true)
     }
 }
 

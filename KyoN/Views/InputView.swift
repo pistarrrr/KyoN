@@ -29,6 +29,9 @@ struct InputView: View {
     @State private var answers: [String] = Array(repeating: "", count: inputPages.count)
     @State private var showReflectionView = false
     @Environment(\.dismiss) var dismiss
+    
+    // State baru untuk mengontrol navigasi ke DashboardView
+    @State private var navigateToDashboard = false
 
     var body: some View {
         NavigationStack {

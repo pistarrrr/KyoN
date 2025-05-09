@@ -80,7 +80,7 @@ struct OnboardingView: View {
                         isNavigating = true
                     }
                 }) {
-                    Text(currentPage < onboardingPages.count - 1 ? "Get Started" : "Continue")
+                    Text(currentPage < onboardingPages.count - 1 ? "Next" : "Get Started")
                         .font(.headline)
                         .foregroundColor(.white)
                         .padding()
@@ -91,7 +91,7 @@ struct OnboardingView: View {
                         .padding(.bottom, 30)
                 }
 
-                // 👇 This link becomes active when Continue is tapped
+                // Link becomes active when Continue is tapped
                 NavigationLink(destination: InputView(), isActive: $isNavigating) {
                     EmptyView()
                 }
